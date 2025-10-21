@@ -1,0 +1,18 @@
+<app-navbar></app-navbar>
+<div class="container">
+<div class="header">
+<h2>Laboratorios</h2>
+<a class="btn" routerLink="/labs/new">Nuevo laboratorio</a>
+</div>
+
+
+<div class="grid">
+<div *ngFor="let lab of labs" class="card">
+<h3>{{lab.nombre}}</h3>
+<p>{{lab.ubicacion}} · Capacidad: {{lab.capacidad}}</p>
+<div class="actions">
+<a [routerLink]="['/labs/edit', lab.id]">Editar</a>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,10 @@
+.app-navbar {
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0.75rem 1rem;
+background:#1e293b;
+color:#fff;
+.brand { font-weight:700; font-size:1.1rem; }
+.nav-actions a { margin-left:1rem; color:#fff; text-decoration:none; }
+}

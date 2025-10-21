@@ -1,0 +1,15 @@
+<div class="container">
+<div class="header"><h2>Reservas</h2><a class="btn" routerLink="/reservations/new">Nueva reserva</a></div>
+<table class="table">
+<thead><tr><th>Laboratorio</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Acciones</th></tr></thead>
+<tbody>
+<tr *ngFor="let r of reservations">
+<td>{{r.lab}}</td>
+<td>{{r.start}}</td>
+<td>{{r.end}}</td>
+<td>{{r.estado}}</td>
+<td><a href="/reservations/edit/{{r.id}}">Editar</a></td>
+</tr>
+</tbody>
+</table>
+</div>

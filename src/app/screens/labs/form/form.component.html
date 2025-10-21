@@ -1,0 +1,10 @@
+<app-navbar></app-navbar>
+<div class="container">
+<h2>Formulario Laboratorio</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+<label>Nombre<input formControlName="nombre" /></label>
+<label>Ubicación<input formControlName="ubicacion" /></label>
+<label>Capacidad<input type="number" formControlName="capacidad" /></label>
+<button type="submit" [disabled]="form.invalid">Guardar</button>
+</form>
+</div>

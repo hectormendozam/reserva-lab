@@ -1,0 +1,17 @@
+<div class="container">
+<h2>Nueva Reserva</h2>
+<form  (ngSubmit)="submit()">
+<label>Laboratorio
+<select>
+<option >-- Selecciona --</option>
+<option *ngFor="let l of labs" >{{l.nombre}}</option>
+</select>
+</label>
+
+
+<label>Inicio<input type="datetime-local" formControlName="start" /></label>
+<label>Fin<input type="datetime-local" formControlName="end" /></label>
+<label>Motivo<textarea formControlName="motivo"></textarea></label>
+<button type="submit" [disabled]="form.invalid">Reservar</button>
+</form>
+</div>
