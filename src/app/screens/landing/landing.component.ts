@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent {
+totalLabs: any;
+totalEquipment: any;
+totalUsers: any;
+totalReservations: any;
 
 }
