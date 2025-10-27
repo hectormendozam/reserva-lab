@@ -6,6 +6,7 @@ import {
 } from '../../../shared/models/reservation.model';
 import { LabsService } from '../../../services/labs.service';
 import { Lab } from '../../../shared/models/lab.model';
+import { ReservationsService } from '../../../services/reservations.service';
 
 type DraftReservation = Reservation | (Reservation & { id: string });
 
@@ -40,10 +41,19 @@ export class ReservationsListComponent implements OnInit {
     return Math.min(this.pageStart + this.pageSize, this.filtered.length);
   }
 
-  constructor(private router: Router, private labsSvc: LabsService) {}
+  constructor(
+    private router: Router,
+    private labsSvc: LabsService,
+    private reservationsSvc: ReservationsService
+  ) {}
 
   ngOnInit(): void {
     // labs (para mostrar el nombre desde el id)
+    this.reservationsSvc.list().subscribe((res) => {
+      this.all = res;
+      this.applyFilters();
+      this.loading = false;
+    });
     this.labsSvc.list().subscribe((labs: Lab[]) => (this.labs = labs));
 
     // cargar reservas desde LocalStorage (provisional)
@@ -135,12 +145,14 @@ export class ReservationsListComponent implements OnInit {
   }
 
   cancel(id: string | number) {
-    // Provisional: marcar CANCELLED en localStorage
-    const idx = this.all.findIndex((r) => r.id === id);
-    if (idx < 0) return;
-
-    this.all[idx] = { ...this.all[idx], status: 'CANCELLED' };
-    localStorage.setItem('reservation_drafts', JSON.stringify(this.all));
-    this.applyFilters();
+    this.reservationsSvc.updateStatus(String(id), 'CANCELLED').subscribe(() => {
+      // refresca lista
+      this.reservationsSvc
+        .list({ q: this.q, status: this.status as any, date: this.date })
+        .subscribe((res) => {
+          this.all = res;
+          this.applyFilters();
+        });
+    });
   }
 }

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { LabsService } from '../../../services/labs.service';
 import { Lab } from '../../../shared/models/lab.model';
 import { CreateReservationDto } from '../../../shared/models/reservation.model';
+import { ReservationsService } from '../../../services/reservations.service';
 
 @Component({
   selector: 'app-reservations-form',
@@ -35,7 +36,8 @@ export class ReservationsFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private labsSvc: LabsService
+    private labsSvc: LabsService,
+    private reservationsSvc: ReservationsService
   ) {}
 
   ngOnInit(): void {
@@ -59,19 +61,19 @@ export class ReservationsFormComponent implements OnInit {
     const payload: CreateReservationDto = this.form
       .value as CreateReservationDto;
 
-    // PROVISIONAL: guarda como borrador en localStorage y navega a /reservations
-    try {
-      const drafts = JSON.parse(
-        localStorage.getItem('reservation_drafts') || '[]'
-      );
-      drafts.push({ id: `res-${Date.now()}`, status: 'PENDING', ...payload });
-      localStorage.setItem('reservation_drafts', JSON.stringify(drafts));
-      alert('Reserva provisional guardada (localStorage).');
-      this.router.navigate(['/reservations']); // tu lista
-    } finally {
-      this.loading = false;
-    }
+    this.reservationsSvc.create(payload).subscribe({
+      next: () => {
+        alert('Reserva guardada.');
+        this.router.navigate(['/reservations']); // vuelve al listado
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Error al guardar la reserva.');
+      },
+      complete: () => (this.loading = false),
+    });
   }
+
   goBack() {
     this.router.navigate(['/reservations']);
   }
