@@ -10,8 +10,8 @@ import { DashboardComponent } from './screens/dashboard/dashboard.component';
 import { AdminComponent } from './screens/admin/admin.component';
 import { ReportsComponent } from './screens/reports/reports.component';
 import { ProfileComponent } from './screens/profile/profile.component';
-
-
+import { ReservationsFormComponent } from './screens/reservations/form/form.component';
+import { ReservationsListComponent } from './screens/reservations/list/list.component';
 
 const routes: Routes = [
   // Página principal
@@ -33,11 +33,12 @@ const routes: Routes = [
   { path: 'equipment', component: EquipmentListComponent },
   { path: 'equipment/new', component: EquipmentFormComponent },
   { path: 'equipment/edit/:id', component: EquipmentFormComponent },
+   */
 
   // Reservas
-  { path: 'reservations', component: ReservationsListComponent },
-  { path: 'reservations/new', component: ReservationsFormComponent },
-  { path: 'reservations/edit/:id', component: ReservationsFormComponent },
+  { path: 'reservations', component: ReservationsListComponent }, // ← lista
+  { path: 'reservations/new', component: ReservationsFormComponent }, // puedes añadir canActivate:[AuthGuard] si ya lo usas
+  /*{ path: 'reservations/edit/:id', component: ReservationsFormComponent },
 
   // Préstamos
   { path: 'loans', component: LoansListComponent },

@@ -1,25 +1,90 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  Validators,
+  FormGroup,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+import { LabsService } from '../../../services/labs.service';
+import { Lab } from '../../../shared/models/lab.model';
+import { CreateReservationDto } from '../../../shared/models/reservation.model';
 
+@Component({
+  selector: 'app-reservations-form',
+  templateUrl: './form.component.html',
+  styleUrls: ['./form.component.scss'],
+})
+export class ReservationsFormComponent implements OnInit {
+  loading = false;
+  labs: Lab[] = [];
 
-@Component({ selector:'app-reservations-form', templateUrl:'./form.component.html', styleUrls:['./form.component.scss'] })
-export class ReservationsFormComponent{
-form: FormGroup;
-labs = [ {id:1, nombre:'Lab Redes'}, {id:2, nombre:'Lab Prog'} ];
+  // Form con validaciones básicas y validador de rango horario
+  form: FormGroup = this.fb.group(
+    {
+      lab_id: ['', [Validators.required]],
+      date: ['', [Validators.required]],
+      start_time: ['', [Validators.required]],
+      end_time: ['', [Validators.required]],
+      purpose: ['', [Validators.required, Validators.maxLength(240)]],
+    },
+    { validators: [timeRangeValidator] }
+  );
 
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private labsSvc: LabsService
+  ) {}
 
-constructor(private fb: FormBuilder){
-this.form = this.fb.group({
-labId: [null, Validators.required],
-start: ['', Validators.required],
-end: ['', Validators.required],
-motivo: ['']
-});
+  ngOnInit(): void {
+    this.labsSvc.list().subscribe((labs: Lab[]) => {
+      this.labs = labs;
+    });
+  }
+
+  touched(controlName: string) {
+    const c = this.form.get(controlName);
+    return !!c && c.invalid && (c.dirty || c.touched);
+  }
+
+  submit() {
+    if (this.form.invalid || this.loading) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+    const payload: CreateReservationDto = this.form
+      .value as CreateReservationDto;
+
+    // PROVISIONAL: guarda como borrador en localStorage y navega a /reservations
+    try {
+      const drafts = JSON.parse(
+        localStorage.getItem('reservation_drafts') || '[]'
+      );
+      drafts.push({ id: `res-${Date.now()}`, status: 'PENDING', ...payload });
+      localStorage.setItem('reservation_drafts', JSON.stringify(drafts));
+      alert('Reserva provisional guardada (localStorage).');
+      this.router.navigate(['/reservations']); // tu lista
+    } finally {
+      this.loading = false;
+    }
+  }
+  goBack() {
+    this.router.navigate(['/reservations']);
+  }
+
+  cancel() {
+    this.router.navigate(['/reservations']);
+  }
 }
 
-
-submit(){
-if(this.form.invalid) return;
-console.log('reserve', this.form.value);
-}
+/** Validador simple: start_time < end_time */
+function timeRangeValidator(group: AbstractControl): ValidationErrors | null {
+  const start = group.get('start_time')?.value;
+  const end = group.get('end_time')?.value;
+  if (!start || !end) return null;
+  return start < end ? null : { timeRange: true };
 }

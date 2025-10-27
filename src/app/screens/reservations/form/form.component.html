@@ -1,17 +1,105 @@
-<div class="container">
-<h2>Nueva Reserva</h2>
-<form  (ngSubmit)="submit()">
-<label>Laboratorio
-<select>
-<option >-- Selecciona --</option>
-<option *ngFor="let l of labs" >{{l.nombre}}</option>
-</select>
-</label>
+<app-navbar></app-navbar>
 
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="d-flex align-items-center mb-3">
+        <button class="btn btn-link me-2" (click)="goBack()">
+          <i class="bi bi-arrow-left"></i> Regresar
+        </button>
+        <h3 class="mb-0">Nueva reserva</h3>
+      </div>
 
-<label>Inicio<input type="datetime-local" formControlName="start" /></label>
-<label>Fin<input type="datetime-local" formControlName="end" /></label>
-<label>Motivo<textarea formControlName="motivo"></textarea></label>
-<button type="submit" [disabled]="form.invalid">Reservar</button>
-</form>
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <!-- Laboratorio -->
+            <div class="mb-3">
+              <label class="form-label">Laboratorio</label>
+              <select class="form-select" formControlName="lab_id">
+                <option value="" disabled>Selecciona un laboratorio</option>
+                <option *ngFor="let lab of labs" [value]="lab.id">
+                  {{ lab.name }} — {{ lab.kind }}
+                </option>
+              </select>
+              <div *ngIf="touched('lab_id')" class="text-danger small mt-1">
+                Selecciona un laboratorio.
+              </div>
+            </div>
+
+            <!-- Fecha -->
+            <div class="mb-3">
+              <label class="form-label">Fecha</label>
+              <input type="date" class="form-control" formControlName="date" />
+              <div *ngIf="touched('date')" class="text-danger small mt-1">
+                Selecciona una fecha.
+              </div>
+            </div>
+
+            <!-- Horas -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Hora inicio</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  formControlName="start_time"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Hora fin</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  formControlName="end_time"
+                />
+              </div>
+              <div
+                *ngIf="form.errors?.['timeRange']"
+                class="text-danger small ps-3"
+              >
+                La hora de inicio debe ser menor que la hora de fin.
+              </div>
+            </div>
+
+            <!-- Motivo -->
+            <div class="mb-3">
+              <label class="form-label">Motivo de uso</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                formControlName="purpose"
+                placeholder="Breve descripción del uso (máx. 240 caracteres)"
+              ></textarea>
+              <div *ngIf="touched('purpose')" class="text-danger small mt-1">
+                Ingresa el motivo (1–240).
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="goBack()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="form.invalid || loading"
+              >
+                {{ loading ? "Guardando…" : "Confirmar reserva" }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <p class="text-muted small mt-3">
+        * Validación provisional local. Más tarde conectaremos disponibilidad y
+        choques de horarios.
+      </p>
+    </div>
+  </div>
 </div>

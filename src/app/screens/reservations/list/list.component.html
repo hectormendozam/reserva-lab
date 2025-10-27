@@ -1,15 +1,167 @@
-<div class="container">
-<div class="header"><h2>Reservas</h2><a class="btn" routerLink="/reservations/new">Nueva reserva</a></div>
-<table class="table">
-<thead><tr><th>Laboratorio</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Acciones</th></tr></thead>
-<tbody>
-<tr *ngFor="let r of reservations">
-<td>{{r.lab}}</td>
-<td>{{r.start}}</td>
-<td>{{r.end}}</td>
-<td>{{r.estado}}</td>
-<td><a href="/reservations/edit/{{r.id}}">Editar</a></td>
-</tr>
-</tbody>
-</table>
+<app-navbar></app-navbar>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h3 class="mb-0">Reservas</h3>
+      <small class="text-muted">Listado y gestión de reservas</small>
+    </div>
+    <button class="btn btn-primary" (click)="goCreate()">
+      <i class="bi bi-plus-lg"></i> Nueva reserva
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Buscar</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Laboratorio, usuario, motivo…"
+            [(ngModel)]="q"
+            (ngModelChange)="applyFilters()"
+          />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Estado</label>
+          <select
+            class="form-select"
+            [(ngModel)]="status"
+            (ngModelChange)="applyFilters()"
+          >
+            <option value="">Todos</option>
+            <option value="PENDING">Pendiente</option>
+            <option value="APPROVED">Aprobada</option>
+            <option value="REJECTED">Rechazada</option>
+            <option value="CANCELLED">Cancelada</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Fecha</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="date"
+            (ngModelChange)="applyFilters()"
+          />
+        </div>
+        <div class="col-md-2 text-end">
+          <button
+            class="btn btn-outline-secondary w-100"
+            (click)="clearFilters()"
+          >
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Laboratorio</th>
+              <th>Fecha</th>
+              <th>Inicio</th>
+              <th>Fin</th>
+              <th>Motivo</th>
+              <th>Estado</th>
+              <th class="text-end">Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let r of page">
+              <td>{{ labName(r.lab_id) }}</td>
+              <td>{{ r.date }}</td>
+              <td>{{ r.start_time }}</td>
+              <td>{{ r.end_time }}</td>
+              <td class="text-truncate" style="max-width: 280px">
+                {{ r.purpose }}
+              </td>
+              <td>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'bg-warning text-dark': r.status === 'PENDING',
+                    'bg-success': r.status === 'APPROVED',
+                    'bg-danger':
+                      r.status === 'CANCELLED' || r.status === 'REJECTED'
+                  }"
+                >
+                  {{ mapStatus(r.status) }}
+                </span>
+              </td>
+              <td class="text-end">
+                <button
+                  class="btn btn-sm btn-outline-primary me-2"
+                  (click)="view(r.id)"
+                >
+                  <i class="bi bi-eye"></i> Ver
+                </button>
+                <button
+                  class="btn btn-sm btn-outline-secondary me-2"
+                  (click)="edit(r.id)"
+                >
+                  <i class="bi bi-pencil"></i> Editar
+                </button>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="cancel(r.id)"
+                  [disabled]="r.status === 'CANCELLED'"
+                >
+                  <i class="bi bi-x-circle"></i> Cancelar
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="!loading && filtered.length === 0">
+              <td colspan="7" class="text-center text-muted py-3">
+                No hay reservas.
+              </td>
+            </tr>
+
+            <tr *ngIf="loading">
+              <td colspan="7" class="py-3">
+                <div class="d-flex justify-content-center align-items-center">
+                  <div class="spinner-border me-2" role="status"></div>
+                  Cargando…
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Paginación simple -->
+    <div class="card-footer d-flex justify-content-between align-items-center">
+      <div class="small text-muted">
+        Mostrando {{ pageStart + 1 }}–{{ pageEnd }} de {{ filtered.length }}
+      </div>
+      <div>
+        <button
+          class="btn btn-sm btn-outline-secondary me-2"
+          (click)="prev()"
+          [disabled]="pageIndex === 0"
+        >
+          Anterior
+        </button>
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          (click)="next()"
+          [disabled]="(pageIndex + 1) * pageSize >= filtered.length"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

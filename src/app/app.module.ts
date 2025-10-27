@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms'; 
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
+import { HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 
 import { LandingComponent } from './screens/landing/landing.component';
@@ -23,6 +23,8 @@ import { ToastComponent } from './partials/toast/toast.component';
 import { ConfirmReservationComponent } from './modals/confirm-reservation/confirm-reservation.component';
 import { ReturnEquipmentComponent } from './modals/return-equipment/return-equipment.component';
 import { IncidentReportComponent } from './modals/incident-report/incident-report.component';
+import { ReservationsFormComponent } from './screens/reservations/form/form.component';
+import { ReservationsListComponent } from './screens/reservations/list/list.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { IncidentReportComponent } from './modals/incident-report/incident-repor
     ConfirmReservationComponent,
     ReturnEquipmentComponent,
     IncidentReportComponent,
-    
+    ReservationsFormComponent,
+    ReservationsListComponent,
   ],
   imports: [
     RouterModule,
@@ -52,8 +55,9 @@ import { IncidentReportComponent } from './modals/incident-report/incident-repor
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    HttpClientModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

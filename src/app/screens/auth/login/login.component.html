@@ -1,24 +1,31 @@
 <div class="auth-page">
-<app-navbar></app-navbar>
-<div class="auth-card">
-<h2>Iniciar sesión</h2>
-<form (ngSubmit)="submit()">
-<label>
-Correo
-<input formControlName="correo" type="email" />
-</label>
-<div *ngIf="form.get('correo')?.invalid && form.get('correo')?.touched" class="error">Correo inválido</div>
+  <div class="auth-card">
+    <h2>Iniciar sesión</h2>
+    <form (ngSubmit)="submit()">
+      <label>
+        Correo
+        <input formControlName="correo" type="email" />
+      </label>
+      <div
+        *ngIf="form.get('correo')?.invalid && form.get('correo')?.touched"
+        class="error"
+      >
+        Correo inválido
+      </div>
 
+      <label>
+        Contraseña
+        <input formControlName="password" type="password" />
+      </label>
+      <div
+        *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+        class="error"
+      >
+        Contraseña inválida
+      </div>
 
-<label>
-Contraseña
-<input formControlName="password" type="password" />
-</label>
-<div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error">Contraseña inválida</div>
-
-
-<button type="submit" [disabled]="form.invalid">Entrar</button>
-</form>
-<p>¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
-</div>
+      <button type="submit" [disabled]="form.invalid">Entrar</button>
+    </form>
+    <p>¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
+  </div>
 </div>
