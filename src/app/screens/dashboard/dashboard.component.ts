@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit {
 
   // ====== Nuevos métodos para funcionalidades añadidas ======
   goCreateLoan(): void {
-    this.router.navigate(['/loans/new']);
+    this.router.navigate(['/loans']);
   }
   viewLoan(id: string): void {
     this.router.navigate(['/loans/view', id]);

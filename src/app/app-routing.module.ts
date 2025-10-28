@@ -12,7 +12,8 @@ import { ReportsComponent } from './screens/reports/reports.component';
 import { ProfileComponent } from './screens/profile/profile.component';
 import { ReservationsFormComponent } from './screens/reservations/form/form.component';
 import { ReservationsListComponent } from './screens/reservations/list/list.component';
-
+import { ListComponent } from './screens/loans/list/list.component';
+import { FormComponent } from './screens/loans/form/form.component';
 const routes: Routes = [
   // Página principal
   { path: '', component: LandingComponent },
@@ -38,12 +39,11 @@ const routes: Routes = [
   // Reservas
   { path: 'reservations', component: ReservationsListComponent }, // ← lista
   { path: 'reservations/new', component: ReservationsFormComponent }, // puedes añadir canActivate:[AuthGuard] si ya lo usas
-  /*{ path: 'reservations/edit/:id', component: ReservationsFormComponent },
 
   // Préstamos
-  { path: 'loans', component: LoansListComponent },
-  { path: 'loans/new', component: LoansFormComponent },
-  { path: 'loans/edit/:id', component: LoansFormComponent },*/
+  { path: 'loans', component: ListComponent },
+  { path: 'loans/new', component: FormComponent },
+  // { path: 'loans/edit/:id', component: LoansFormComponent },
 
   // Administración y reportes
   { path: 'admin', component: AdminComponent },

@@ -25,6 +25,8 @@ import { ReturnEquipmentComponent } from './modals/return-equipment/return-equip
 import { IncidentReportComponent } from './modals/incident-report/incident-report.component';
 import { ReservationsFormComponent } from './screens/reservations/form/form.component';
 import { ReservationsListComponent } from './screens/reservations/list/list.component';
+import { FormComponent } from './screens/loans/form/form.component';
+import { ListComponent } from './screens/loans/list/list.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,8 @@ import { ReservationsListComponent } from './screens/reservations/list/list.comp
     IncidentReportComponent,
     ReservationsFormComponent,
     ReservationsListComponent,
+    FormComponent,
+    ListComponent,
   ],
   imports: [
     RouterModule,

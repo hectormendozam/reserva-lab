@@ -1,1 +1,96 @@
-<p>form works!</p>
+<div class="container py-4">
+  <div class="d-flex align-items-center mb-3">
+    <button class="btn btn-link me-2" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i> Regresar
+    </button>
+    <h3 class="mb-0">Nuevo préstamo</h3>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <!-- Equipo -->
+        <div class="mb-3">
+          <label class="form-label">Equipo</label>
+          <select class="form-select" formControlName="equipment_id">
+            <option value="" disabled>Selecciona un equipo</option>
+            <option *ngFor="let e of equipment" [value]="e.id">
+              {{ e.name }} — disp: {{ e.available_qty }}
+            </option>
+          </select>
+          <div *ngIf="t('equipment_id')" class="text-danger small mt-1">
+            Selecciona un equipo.
+          </div>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="mb-3">
+          <label class="form-label">Cantidad solicitada</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="qty"
+            min="1"
+          />
+          <div *ngIf="t('qty')" class="text-danger small mt-1">
+            Cantidad inválida o supera la disponibilidad.
+          </div>
+        </div>
+
+        <!-- Fechas -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Fecha de préstamo</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="loan_date"
+            />
+            <div *ngIf="t('loan_date')" class="text-danger small mt-1">
+              Requerida.
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Fecha de devolución prevista</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="due_date"
+            />
+            <div *ngIf="form.errors?.['dateRange']" class="text-danger small">
+              La fecha de devolución debe ser posterior a la de préstamo.
+            </div>
+          </div>
+        </div>
+
+        <!-- Notas -->
+        <div class="mb-3">
+          <label class="form-label">Notas (opcional)</label>
+          <textarea
+            class="form-control"
+            rows="2"
+            formControlName="notes"
+            maxlength="240"
+          ></textarea>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="goBack()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="form.invalid || loading"
+          >
+            {{ loading ? "Guardando…" : "Solicitar préstamo" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
